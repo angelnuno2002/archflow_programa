@@ -3,6 +3,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { auth, signOut } from "@/lib/auth";
 import { Button } from "@/components/ui/button";
+import { logout } from "@/lib/auth-actions";
 
 async function SessionInfo() {
   const session = await auth();
@@ -24,16 +25,11 @@ export default function DashboardPage() {
         >
           Ir a proyectos
         </Link>
-        <form
-          action={async () => {
-            "use server";
-            await signOut({ redirectTo: "/login" });
-          }}
-        >
-          <Button type="submit" variant="outline">
-            Cerrar sesión
-          </Button>
-        </form>
+          <form action={logout}>
+     <Button type="submit" variant="outline">
+       Cerrar sesión
+     </Button>
+   </form>
       </div>
     </main>
   );

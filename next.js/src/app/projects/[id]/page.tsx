@@ -3,7 +3,9 @@ import { prisma } from "@/lib/db";
 import { requireMember } from "@/lib/permissions";
 import { archiveProject } from "../actions";
 import { PhasesEditor } from "./phases-editor";
+import { MembersPanel } from "./members-panel";
 import { Button } from "@/components/ui/button";
+
 
 function formatDate(date: Date) {
   return date.toLocaleDateString("es-MX", {
@@ -17,11 +19,20 @@ function formatDate(date: Date) {
 async function ProjectDetail({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const { project, membership } = await requireMember(id);
+  const isArchitect = membership.role === "ARQUITECTO";
+  const isClient = membership.role === "CLIENTE";
+
   const phases = await prisma.phase.findMany({
     where: { projectId: id },
     orderBy: { order: "asc" },
   });
-  const canEdit = membership.role === "ARQUITECTO";
+  const members = isClient
+    ? []
+    : await prisma.projectMember.findMany({
+        where: { projectId: id },
+        include: { user: { select: { name: true, email: true } } },
+        orderBy: { createdAt: "asc" },
+      });
 
   return (
     <div className="space-y-6">
@@ -35,7 +46,7 @@ async function ProjectDetail({ params }: { params: Promise<{ id: string }> }) {
 
       <section className="space-y-2">
         <h2 className="text-lg font-medium">Fases</h2>
-        {canEdit ? (
+        {isArchitect ? (
           <PhasesEditor projectId={project.id} phases={phases} />
         ) : (
           <ol className="space-y-2">
@@ -53,7 +64,18 @@ async function ProjectDetail({ params }: { params: Promise<{ id: string }> }) {
         )}
       </section>
 
-      {canEdit && (
+      {!isClient && (
+        <section className="space-y-2">
+          <h2 className="text-lg font-medium">Equipo y cliente</h2>
+          <MembersPanel
+            projectId={project.id}
+            members={members}
+            canInvite={isArchitect}
+          />
+        </section>
+      )}
+
+      {isArchitect && (
         <form action={archiveProject.bind(null, project.id)}>
           <Button type="submit" variant="outline">
             Archivar proyecto

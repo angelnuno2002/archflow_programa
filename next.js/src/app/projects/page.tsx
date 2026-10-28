@@ -2,6 +2,8 @@ import { Suspense } from "react";
 import Link from "next/link";
 import { prisma } from "@/lib/db";
 import { requireUser } from "@/lib/permissions";
+import { Button } from "@/components/ui/button";
+import { logout } from "@/lib/auth-actions";
 
 async function NewProjectLink() {
   const user = await requireUser();
@@ -50,15 +52,27 @@ async function ProjectList() {
 export default function ProjectsPage() {
   return (
     <main className="mx-auto max-w-3xl space-y-6 p-6">
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-semibold">Proyectos</h1>
-        <Suspense fallback={null}>
-          <NewProjectLink />
-        </Suspense>
-      </div>
-      <Suspense fallback={<p>Cargando…</p>}>
-        <ProjectList />
-      </Suspense>
+     <div className="flex flex-wrap items-center justify-between gap-2">
+  <div className="flex items-center gap-3">
+    <Link
+      href="/dashboard"
+      className="rounded-md border px-4 py-2 text-sm font-medium hover:bg-muted"
+    >
+      ← Dashboard
+    </Link>
+    <h1 className="text-2xl font-semibold">Proyectos</h1>
+  </div>
+  <div className="flex items-center gap-2">
+    <Suspense fallback={null}>
+      <NewProjectLink />
+    </Suspense>
+     <form action={logout}>
+     <Button type="submit" variant="outline">
+       Cerrar sesión
+     </Button>
+   </form>
+  </div>
+</div>
     </main>
   );
 }
