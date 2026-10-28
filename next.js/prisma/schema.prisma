@@ -29,6 +29,7 @@ model User {
   accounts      Account[]
   sessions      Session[]
   memberships   ProjectMember[]
+  isStaff       Boolean         @default(false)
 }
 
 model Account {

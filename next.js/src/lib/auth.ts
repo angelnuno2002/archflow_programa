@@ -31,6 +31,14 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       },
     }),
   ],
+  events: {
+    async createUser({ user }) {
+      if (user.email?.toLowerCase() === process.env.ADMIN_EMAIL?.toLowerCase()) {
+        await prisma.user.update({ where: { id: user.id! }, data: { isStaff: true } });
+      }
+    },
+  },
+
   callbacks: {
     async signIn({ user }) {
       const email = user.email?.toLowerCase();
@@ -41,6 +49,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     async session({ session, user }) {
       session.user.id = user.id;
       return session;
+      
     },
   },
 });

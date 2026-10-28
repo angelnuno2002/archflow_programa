@@ -1,6 +1,8 @@
 import { Suspense } from "react";
 import { redirect } from "next/navigation";
-import { auth } from "@/lib/auth";
+import { auth, signOut } from "@/lib/auth";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 async function SessionInfo() {
   const session = await auth();
@@ -15,6 +17,16 @@ export default function DashboardPage() {
       <Suspense fallback={<p>Cargando…</p>}>
         <SessionInfo />
       </Suspense>
+      <form
+        action={async () => {
+          "use server";
+          await signOut({ redirectTo: "/login" });
+        }}
+      >
+         <Button type="submit" variant="outline"> 
+          Cerrar sesión
+        </Button>
+      </form>
     </main>
   );
 }
