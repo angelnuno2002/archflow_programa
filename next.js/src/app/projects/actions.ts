@@ -53,3 +53,23 @@ export async function archiveProject(projectId: string) {
   revalidatePath("/projects");
   redirect("/projects");
 }
+export async function restoreProject(projectId: string) {
+  await requireMember(projectId, ["ARQUITECTO"]);
+
+  await prisma.project.update({
+    where: { id: projectId },
+    data: { status: "ACTIVO", archivedAt: null },
+  });
+
+  revalidatePath("/projects");
+}
+
+export async function deleteProject(projectId: string) {
+  const { project } = await requireMember(projectId, ["ARQUITECTO"]);
+  if (project.status !== "ARCHIVADO") {
+    throw new Error("Solo se pueden eliminar proyectos archivados");
+  }
+
+  await prisma.project.delete({ where: { id: projectId } });
+  revalidatePath("/projects");
+}

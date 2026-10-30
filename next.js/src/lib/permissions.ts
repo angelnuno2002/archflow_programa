@@ -2,8 +2,10 @@ import { redirect, notFound } from "next/navigation";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import type { ProjectRole } from "@/generated/prisma/enums";
+import { connection } from "next/server";
 
 export async function requireUser() {
+  await connection();
   const session = await auth();
   const userId = session?.user?.id;
   if (!session?.user || !userId) redirect("/login");

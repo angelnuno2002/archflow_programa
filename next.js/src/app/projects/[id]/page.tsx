@@ -5,7 +5,7 @@ import { archiveProject } from "../actions";
 import { PhasesEditor } from "./phases-editor";
 import { MembersPanel } from "./members-panel";
 import { Button } from "@/components/ui/button";
-
+import Link from "next/link";
 
 function formatDate(date: Date) {
   return date.toLocaleDateString("es-MX", {
@@ -92,7 +92,13 @@ export default function ProjectPage({
   params: Promise<{ id: string }>;
 }) {
   return (
-    <main className="mx-auto max-w-3xl p-6">
+    <main className="mx-auto max-w-3xl space-y-6 p-6">
+      <Link
+        href="/projects"
+        className="inline-block rounded-md border px-4 py-2 text-sm font-medium hover:bg-muted"
+      >
+        ← Proyectos
+      </Link>
       <Suspense fallback={<p>Cargando…</p>}>
         <ProjectDetail params={params} />
       </Suspense>
