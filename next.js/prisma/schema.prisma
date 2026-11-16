@@ -8,7 +8,18 @@ datasource db {
   provider = "postgresql"
 }
 
-  enum UserRole {
+ enum ProjectRole {
+  ARQUITECTO
+  COLABORADOR
+  CLIENTE
+}
+
+enum ProjectStatus {
+  ACTIVO
+  ARCHIVADO
+}
+
+enum UserRole {
   SUPER_ADMIN
   ADMIN
   ARQUITECTO
@@ -19,20 +30,6 @@ enum UserStatus {
   PENDIENTE
   APROBADO
   RECHAZADO
-}
-  role          UserRole        @default(CLIENTE)
-  status        UserStatus      @default(PENDIENTE)
-
-
-enum ProjectRole {
-  ARQUITECTO
-  COLABORADOR
-  CLIENTE
-}
-
-enum ProjectStatus {
-  ACTIVO
-  ARCHIVADO
 }
 
 model User {
@@ -46,10 +43,9 @@ model User {
   sessions      Session[]
   memberships   ProjectMember[]
   isStaff       Boolean         @default(false)
-  role          UserRole   @default(CLIENTE)
-  status        UserStatus @default(PENDIENTE)
+  role          UserRole        @default(CLIENTE)
+  status        UserStatus      @default(PENDIENTE)
 }
-
 model Account {
   id                String  @id @default(cuid())
   userId            String
