@@ -12,11 +12,18 @@ const createProjectSchema = z.object({
 });
 
 const DEFAULT_PHASES = [
-  "Anteproyecto",
-  "Renders 1ra etapa",
-  "Proyecto ejecutivo",
-  "Renders finales",
+  { name: "Anteproyecto", days: 30 },
+  { name: "Renders 1ra etapa", days: 60 },
+  { name: "Proyecto ejecutivo", days: 90 },
+  { name: "Renders finales", days: 120 },
 ];
+
+function dueIn(days: number) {
+  const d = new Date();
+  d.setUTCDate(d.getUTCDate() + days);
+  d.setUTCHours(12, 0, 0, 0);
+  return d;
+}
 
 export async function createProject(formData: FormData) {
   const user = await requireStaff();
@@ -32,11 +39,14 @@ export async function createProject(formData: FormData) {
       name: parsed.data.name,
       description: parsed.data.description,
       members: { create: { userId: user.id, role: "ARQUITECTO" } },
-      phases: {
-        create: DEFAULT_PHASES.map((name, i) => ({ name, order: i + 1 })),
-      },
-    },
-  });
+phases: {
+  create: DEFAULT_PHASES.map((p, i) => ({
+    name: p.name,
+    order: i + 1,
+    dueDate: dueIn(p.days),
+  })),
+},
+  }})
 
   revalidatePath("/projects");
   redirect(`/projects/${project.id}`);

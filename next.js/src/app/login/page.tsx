@@ -1,24 +1,83 @@
-import { signIn } from "@/lib/auth";
+import { Suspense } from "react";
+import { AuthShell } from "@/components/ui/auth-shell";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { requestLoginLink } from "@/lib/auth-actions";
 
-export default function LoginPage() {
+const MESSAGES: Record<string, string> = {
+  AccessDenied: "Ese correo no tiene acceso. Usa el correo con el que te invitó el estudio.",
+  Verification: "El enlace venció o ya se usó. Pide uno nuevo.",
+};
+
+async function ErrorMessage({
+  searchParams,
+}: {
+  searchParams: Promise<{ error?: string }>;
+}) {
+  const { error } = await searchParams;
+  if (!error) return null;
+
   return (
-    <main className="mx-auto flex min-h-screen max-w-sm flex-col justify-center gap-4 p-6">
-      <h1 className="text-2xl font-semibold">Entrar a ArchFlow</h1>
-      <form
-        className="flex flex-col gap-3"
-        action={async (formData: FormData) => {
-          "use server";
-          await signIn("resend", {
-            email: formData.get("email") as string,
-            redirectTo: "/dashboard",
-          });
-        }}
+    <p role="alert" className="flex items-start gap-2 text-sm text-amber-800">
+      <svg
+        viewBox="0 0 20 20"
+        className="mt-0.5 h-4 w-4 shrink-0 text-amber-600"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.8"
+        strokeLinecap="round"
+        aria-hidden
       >
-        <Input name="email" type="email" placeholder="tu@correo.com" required />
-        <Button type="submit">Enviarme el enlace</Button>
+        <circle cx="10" cy="10" r="8" />
+        <path d="M10 6v5M10 14v.01" />
+      </svg>
+      <span>{MESSAGES[error] ?? "No pudimos enviarte el enlace. Inténtalo de nuevo."}</span>
+    </p>
+  );
+}
+
+export default function LoginPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ error?: string }>;
+}) {
+  return (
+    <AuthShell>
+      <div className="space-y-2">
+        <h1 className="text-4xl font-bold tracking-tight text-neutral-900">Entra a tu cuenta</h1>
+        <p className="text-neutral-500">Usa el correo con el que te invitó el estudio.</p>
+      </div>
+
+      <form action={requestLoginLink} className="space-y-4">
+        <div className="space-y-2">
+          <label htmlFor="email" className="text-sm font-semibold text-neutral-900">
+            Correo
+          </label>
+          <input
+            id="email"
+            name="email"
+            type="email"
+            required
+            autoComplete="email"
+            placeholder="tu@correo.com"
+            className="h-12 w-full rounded-lg border border-neutral-300 bg-white px-4 text-base outline-none focus:border-[#1f4b7b] focus:ring-2 focus:ring-[#1f4b7b]/20"
+          />
+        </div>
+
+        <Suspense fallback={null}>
+          <ErrorMessage searchParams={searchParams} />
+        </Suspense>
+
+        <Button
+          type="submit"
+          className="h-12 w-full rounded-lg bg-[#1f4b7b] text-base font-semibold text-white hover:bg-[#183c63]"
+        >
+          Entrar
+        </Button>
+
+        <p className="text-sm text-neutral-500">
+          No necesitas contraseña: te enviamos un enlace de acceso por correo.
+        </p>
       </form>
-    </main>
+    </AuthShell>
   );
 }

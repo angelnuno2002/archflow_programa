@@ -55,7 +55,7 @@ export function PhasesEditor({
               maxLength={80}
               className="min-w-48 flex-1"
             />
-            <Input
+            <Input required
               name="dueDate"
               type="date"
               defaultValue={phase.dueDate?.toISOString().slice(0, 10) ?? ""}
@@ -84,7 +84,7 @@ export function PhasesEditor({
           maxLength={80}
           className="min-w-48 flex-1"
         />
-        <Input name="dueDate" type="date" className="w-40" />
+        <Input required name="dueDate" type="date" className="w-40" />
         <Button type="submit" variant="outline">
           Añadir fase
         </Button>

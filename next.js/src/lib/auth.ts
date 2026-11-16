@@ -6,7 +6,7 @@ import { prisma } from "@/lib/db";
 export const { handlers, auth, signIn, signOut } = NextAuth({
   adapter: PrismaAdapter(prisma),
   session: { strategy: "database" },
-  pages: { signIn: "/login", verifyRequest: "/login/revisa-tu-correo" },
+  pages: { signIn: "/login", verifyRequest: "/login/Revisa-tu-correo" },
   providers: [
     Resend({
       from: process.env.EMAIL_FROM,
@@ -53,3 +53,9 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     },
   },
 });
+
+pages: {
+  signIn: "/login";
+  error: "/login";
+  verifyRequest: "/login/revisa-tu-correo";
+}

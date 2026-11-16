@@ -7,12 +7,15 @@ import { requireMember } from "@/lib/permissions";
 
 const phaseSchema = z.object({
   name: z.string().trim().min(2, "El nombre necesita al menos 2 caracteres").max(80),
-  dueDate: z.union([z.literal(""), z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "Fecha inválida")]),
+  dueDate: z
+    .string()
+    .regex(/^\d{4}-\d{2}-\d{2}$/, "La fecha de entrega es obligatoria")
+    .refine((v) => !Number.isNaN(Date.parse(v)), "Fecha inválida"),
 });
 
-// Guardamos la fecha a mediodía UTC para que no se corra de día por la zona horaria
+// Mediodía UTC para que la fecha no se corra de día por la zona horaria
 function parseDue(value: string) {
-  return value ? new Date(`${value}T12:00:00.000Z`) : null;
+  return new Date(`${value}T12:00:00.000Z`);
 }
 
 function parseForm(formData: FormData) {
