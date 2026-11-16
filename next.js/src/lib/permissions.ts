@@ -1,23 +1,39 @@
 import { redirect, notFound } from "next/navigation";
+import { connection } from "next/server";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import type { ProjectRole } from "@/generated/prisma/enums";
-import { connection } from "next/server";
 
-export async function requireUser() {
+// Sesión iniciada, aunque el registro aún no esté aprobado
+export async function requireSignedIn() {
   await connection();
   const session = await auth();
   const userId = session?.user?.id;
   if (!session?.user || !userId) redirect("/login");
   return { ...session.user, id: userId };
 }
-export async function requireStaff() {
-  const user = await requireUser();
+
+// Sesión iniciada y registro aprobado
+export async function requireUser() {
+  const user = await requireSignedIn();
   const me = await prisma.user.findUnique({
     where: { id: user.id },
-    select: { isStaff: true },
+    select: { role: true, status: true },
   });
-  if (!me?.isStaff) notFound();
+  if (!me) redirect("/login");
+  if (me.status !== "APROBADO") redirect("/espera");
+  return { ...user, role: me.role };
+}
+
+export async function requireStaff() {
+  const user = await requireUser();
+  if (user.role === "CLIENTE") notFound();
+  return user;
+}
+
+export async function requireSuperAdmin() {
+  const user = await requireUser();
+  if (user.role !== "SUPER_ADMIN") notFound();
   return user;
 }
 

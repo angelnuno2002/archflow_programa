@@ -3,12 +3,21 @@ import { requireUser } from "@/lib/permissions";
 import { getUserInfo } from "@/lib/user-info";
 import { AppHeader } from "./app-header";
 import { Logo } from "./logo";
+import { requireSignedIn } from "@/lib/permissions";
 
 async function Header() {
-  const user = await requireUser();
-  const email = user.email ?? "";
-  const info = await getUserInfo(user.id, email);
-  return <AppHeader email={email} tier={info.tier} showClients={info.isStaff} />;
+  const user = await requireSignedIn();
+  const info = await getUserInfo(user.id);
+  const email = user.email;
+
+  return (
+    <AppHeader
+    email={email}
+    tier={info.tier}
+    showClients={info.isStaff}
+    showRequests={info.role === "SUPER_ADMIN"}
+  />
+);
 }
 
 export function AppShell({ children }: { children: ReactNode }) {

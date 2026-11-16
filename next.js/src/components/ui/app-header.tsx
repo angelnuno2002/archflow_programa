@@ -78,7 +78,9 @@ export function AppHeader({
           {showClients && (
             <Link href="/clients" onClick={() => setOpen(false)} className={linkClass}>
               Clientes
+              
             </Link>
+            
           )}
         </nav>
 

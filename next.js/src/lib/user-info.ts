@@ -1,14 +1,18 @@
 import { prisma } from "@/lib/db";
+import type { UserRole } from "@/generated/prisma/enums";
 
-export type UserTier = "Super admin" | "Arquitecto admin" | "Usuario";
+export const ROLE_LABEL: Record<UserRole, string> = {
+  SUPER_ADMIN: "Super admin",
+  ADMIN: "Administrador",
+  ARQUITECTO: "Arquitecto",
+  CLIENTE: "Cliente",
+};
 
-export async function getUserInfo(userId: string, email: string) {
+export async function getUserInfo(userId: string) {
   const me = await prisma.user.findUnique({
     where: { id: userId },
-    select: { name: true, isStaff: true },
+    select: { name: true, role: true },
   });
-  const adminEmail = process.env.ADMIN_EMAIL?.toLowerCase();
-  const isSuper = !!adminEmail && email.toLowerCase() === adminEmail;
-  const tier: UserTier = isSuper ? "Super admin" : me?.isStaff ? "Arquitecto admin" : "Usuario";
-  return { name: me?.name ?? null, isStaff: isSuper || !!me?.isStaff, tier };
+  const role = me?.role ?? "CLIENTE";
+  return { name: me?.name ?? null, role, tier: ROLE_LABEL[role], isStaff: role !== "CLIENTE" };
 }

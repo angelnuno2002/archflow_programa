@@ -7,15 +7,11 @@ import { ProjectList } from "@/components/ui/project-list";
 
 async function NewProjectLink() {
   const user = await requireUser();
-  const me = await prisma.user.findUnique({
-    where: { id: user.id },
-    select: { isStaff: true },
-  });
-  if (!me?.isStaff) return null;
+  if (user.role === "CLIENTE") return null;
   return (
     <Link
       href="/projects/new"
-      className="rounded-md bg-[#1f4b7b] px-4 py-2 text-sm font-semibold text-white hover:bg-[#183c63]"
+      className="rounded-md bg-tinta px-4 py-2 text-sm font-semibold text-white hover:bg-tinta/90"
     >
       Nuevo proyecto
     </Link>

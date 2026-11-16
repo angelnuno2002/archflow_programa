@@ -12,7 +12,7 @@ export function Logo({ className = "" }: { className?: string }) {
         aria-hidden
       >
         <path d="M6 34 L24 6 L42 34 Z" />
-        <path d="M30 28 H46 M41 23 L46 28 L41 33" />
+        <path d="M10 28 H46 M41 23 L46 28 L41 33" />
       </svg>
       <span className="text-3xl font-semibold tracking-tight">ArchFlow</span>
     </div>

@@ -24,7 +24,7 @@ export async function inviteMember(projectId: string, formData: FormData) {
   const invited = await prisma.user.upsert({
     where: { email },
     update: {},
-    create: { email },
+    create: { email, role: role === "CLIENTE" ? "CLIENTE" : "ARQUITECTO", status: "APROBADO" },
   });
 
   const existing = await prisma.projectMember.findUnique({

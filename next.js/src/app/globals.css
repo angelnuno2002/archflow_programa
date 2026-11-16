@@ -128,3 +128,54 @@
     @apply font-sans;
   }
 }
+@theme {
+  --color-papel: #F3F4F2;
+  --color-grafito: #24282C;
+  --color-grafito-2: #5E656C;
+  --color-linea: #D5D9DC;
+  --color-tinta: #1E4A7A;
+  --color-mesa: #3A3D40;
+  --color-redline: #C73A25;
+
+  --color-st-borrador: #5F6670;
+  --color-st-borrador-bg: #ECEEF0;
+  --color-st-revision: #2A65A8;
+  --color-st-revision-bg: #E4ECF5;
+  --color-st-aprobado: #2B7A4B;
+  --color-st-aprobado-bg: #E3F1E8;
+  --color-st-cambios: #9A5B00;
+  --color-st-cambios-bg: #F7ECD9;
+  --color-st-rechazado: #8F1D1D;
+  --color-st-rechazado-bg: #F5E1E1;
+}
+
+@utility wide {
+  font-stretch: 125%;
+}
+
+@utility semi {
+  font-stretch: 115%;
+}
+
+/* Hace que los componentes de shadcn usen la identidad */
+:root {
+  --background: #F3F4F2;
+  --foreground: #24282C;
+  --card: #FFFFFF;
+  --card-foreground: #24282C;
+  --primary: #1E4A7A;
+  --primary-foreground: #FFFFFF;
+  --muted: #ECEEF0;
+  --muted-foreground: #5E656C;
+  --border: #D5D9DC;
+  --input: #D5D9DC;
+  --ring: #1E4A7A;
+  --radius: 0.375rem;
+}
+
+body {
+  font-family: var(--font-archivo), system-ui, sans-serif;
+  font-size: 15px;
+  line-height: 23px;
+  font-variant-numeric: tabular-nums;
+}
