@@ -9,10 +9,13 @@ export function AppHeader({
   email,
   tier,
   showClients,
+  showRequests,
 }: {
   email: string;
   tier: string;
   showClients: boolean;
+  showRequests: boolean;
+  
 }) {
   const [open, setOpen] = useState(false);
 
@@ -78,8 +81,15 @@ export function AppHeader({
           {showClients && (
             <Link href="/clients" onClick={() => setOpen(false)} className={linkClass}>
               Clientes
+            
+          {showRequests && (
+          <Link href="/solicitudes" onClick={() => setOpen(false)} className={linkClass}>
+            Solicitudes
+        </Link>
+)}
               
             </Link>
+            
             
           )}
         </nav>

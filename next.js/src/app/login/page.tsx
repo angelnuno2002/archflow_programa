@@ -1,7 +1,8 @@
 import { Suspense } from "react";
-import { AuthShell } from "@/components/ui/auth-shell";
+import { AuthShell } from "@/components/ui/auth-she7ll";
 import { Button } from "@/components/ui/button";
 import { requestLoginLink } from "@/lib/auth-actions";
+import Link  from "next/link";
 
 const MESSAGES: Record<string, string> = {
   AccessDenied: "Ese correo no tiene acceso. Usa el correo con el que te invitó el estudio.",
@@ -78,6 +79,19 @@ export default function LoginPage({
           No necesitas contraseña: te enviamos un enlace de acceso por correo.
         </p>
       </form>
+
+      <form action={requestLoginLink} className="space-y-4">
+        {/* ...campo de correo, error y botón Entrar... */}
+      </form>
+
+      <p className="text-sm text-neutral-500">
+        ¿Primera vez?{" "}
+        <Link href="/registro" className="font-medium text-tinta hover:underline">
+          Solicita acceso
+        </Link>
+      </p>
+      
     </AuthShell>
+    
   );
 }

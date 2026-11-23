@@ -7,8 +7,9 @@ import { requireSignedIn } from "@/lib/permissions";
 
 async function Header() {
   const user = await requireSignedIn();
+  const email = user.email ?? "";
   const info = await getUserInfo(user.id);
-  const email = user.email;
+
 
   return (
     <AppHeader
