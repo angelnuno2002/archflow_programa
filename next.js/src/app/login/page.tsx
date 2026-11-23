@@ -1,5 +1,5 @@
 import { Suspense } from "react";
-import { AuthShell } from "@/components/ui/auth-she7ll";
+import { AuthShell } from "@/components/ui/auth-shell";
 import { Button } from "@/components/ui/button";
 import { requestLoginLink } from "@/lib/auth-actions";
 import Link  from "next/link";
@@ -90,7 +90,7 @@ export default function LoginPage({
           Solicita acceso
         </Link>
       </p>
-      
+
     </AuthShell>
     
   );
